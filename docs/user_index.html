@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+		content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>木头科技 - 会员管理</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="author" content="闲茶良味 QQ:106079595" />
+	<meta name="keywords" content="系统定制,APP开发,微信小程序开发,微信公众号开发,支付宝小程序开发,网站开发" />
+	<meta name="description" content="浙江木头网络科技有限公司是一家专业的系统开发公司，研发项目有APP,微信小程序,微信公众号,支付宝小程序,网站,ERP,OA,CRM等，欢迎大家咨询定制。" />
+	<link href="./static/admin/css/all.css" rel="stylesheet" />
+	<link href="./static/admin/css/app.css" rel="stylesheet" />
+	<link href="./static/admin/css/ie.css" rel="stylesheet" />
+	<link href="./static/admin/css/jedate.css" rel="stylesheet" />
+	<link href="./static/admin/css/showMessage.css" rel="stylesheet" />
+	<link href="./static/admin/css/toast.css" rel="stylesheet" />
+	<link href="./static/admin/css/xcConfirm.css" rel="stylesheet" />
+	<script src="./static/admin/js/jquery-1.9.0.min.js"></script>
+</head>
+<style type="text/css">
+	*{
+  
+  font-family:Helvetica;
+  margin:0;
+  padding:0;  
+}
+.pointer{
+	color:#270101;
+cursor:pointer}
+body{
+  background:#f0f0f0;
+}
+
+.button{  
+  float:left;
+  width:200px;
+  padding:20px 30px;
+  margin:30px;
+  text-align:center;
+  font-weight:bold;
+  cursor:pointer;
+  transition:background .5s;
+}
+
+#success{
+  background:#03a679;
+  color:#f0f0f0;  
+}
+
+#failure{
+  background:#ff3939;
+  color:#f0f0f0;  
+}
+
+.notify{  
+  position:absolute;
+  top:0px;
+  width:100%;
+  height:0;  
+  box-sizing:border-box;
+  color:white;  
+  text-align:center;
+  background:rgba(12, 7, 8, 0.6);
+  overflow:hidden;
+  box-sizing:border-box;
+  transition:height .2s;
+}
+
+#notifyType:before{
+  display:block;
+  margin-top:15px; 
+}
+
+.active{  
+  height:50px;
+}
+
+.success::before{
+  Content:"已生成";
+}
+
+.failure::before{
+  content:"已删除";}
+
+.box::before{content:attr(datachar);display: block;position: absolute;left: 0;top: 0;color: red;}
+</style>
+<body>
+	<header>
+		<b class="box" id="msgbox" datachar=""></b>
+		<div class="logo"><a href="http://www.wood.com"><img src="./static/all/logo-5.png" alt="浙江木头网络科技有限公司"></a>
+		</div>
+		<nav>
+			<div class="admin">
+				<div class="portrait"><img src="./static/all/members-male-1.png"></div>
+				<dl>
+					<dt>名字</dt>
+					<dd>管理员</dd>
+				</dl>
+			</div>
+			<div class="aftersale">
+				<dl>
+					<dt>谷小姐</dt>
+					<dd>微信：muchmuchgu</dd>
+					<dd>电话：15355688333</dd>
+				</dl>
+			</div>
+			<div class="consulting">
+				<dl>
+					<dt>咨询热线</dt>
+					<dd>0576-88170678</dd>
+				</dl>
+				<dl>
+					<dt>投诉热线</dt>
+					<dd>15557000007</dd>
+				</dl>
+				<dl>
+					<dt>售后服务</dt>
+					<dd>15355688333</dd>
+				</dl>
+			</div>
+			<div class="wood">
+				<div class="qrcode"><img src="./static/all/qr-code.jpg" alt="木头科技公众号二维码"></div>
+				<dl>
+					<dt>木头科技</dt>
+					<dd>WoodNetwork</dd>
+				</dl>
+			</div>
+		</nav>
+	</header>
+
+	<section>
+		
+	{{template "header.html".}}
+		<article>
+			<div class="top-title">
+				<dl>
+					<dt>
+						<h1>会员管理</h1>
+					</dt>
+					<dd><input id="searchbox" onchange="BS()" type="text" class="input" placeholder="请输入您需要搜索的会员名字关键词！">
+						<a  id="SearchButton" type="submit" value="搜索" class="button" />搜索</a></dd>
+						<dd><input id="idbox" onchange="BI()" type="text" class="input"  style="width:300px;" placeholder="请输入您需要编辑的ID！">
+							<a id="idbutton" type="submit" value="搜索" class="button" />进入编辑</a><a href="wood_help.html"><i class="iconfont">&#xe601;</i>帮助文档</a></dd>
+				</dl>
+			</div>
+			<div class="nav1">
+
+
+
+				<ul>
+					<a href="user_index.html">
+						<li id="All">全部会员</li>
+					</a>
+					<a href="user_index.html?f=Visitor">
+						<li id="Visitor">游客</li>
+					</a>
+					<a href="user_index.html?f=Follower">
+						<li id="Follower">关注公众号会员</li>
+					</a>
+					<a href="user_index.html?f=Download">
+						<li id="Download">已下载APP会员</li>
+					</a>
+					<a href="user_index.html?f=Applet">
+						<li id="Applet">小程序会员</li>
+					</a>
+					<a href="user_index.html?f=Formal">
+						<li id="Formal">正式会员</li>
+					</a>
+					<a href="user_index.html?f=VIP">
+						<li id="VIP">VIP会员</li>
+					</a>
+					<a>
+						<input id="generaten" type="text" maxlength="4" size="5" name="fname" value=20>
+					</a>
+					<a>
+						<button id="success" type="button" >自动生成</button>
+					</a>
+					<a>
+						<button id="failure" type="button" >全部删除</button>
+					</a>
+					<a class="vipn" id="vipn">&nbsp;&nbsp;&nbsp;&nbsp;共&nbsp;&nbsp;{{.pn}}&nbsp;/
+					</a><a class="totall" id="totall">{{.n}}</a>
+					<a>位</a>
+					<a id="vipt">会员</a>
+					<!-- <div class="button">Click me for Success!</div>
+					<div class="button">Click me for Failure!</div> -->
+					<div class="notify"><span id="notifyType" class=""></span></div>
+					<!-- <a href="user_generate">
+							<li>自动生成</li>
+						</a> -->
+				</ul>
+			</div>
+			<div class="content">
+				<div class="release">
+					<dl>
+						<dt><i class="iconfont">&#xe601;</i> <b>会员分类说明</b><br>
+							会员刚刚进入到系统，虽然是会员但是属于游客状态，完善了自己的手机号码后才成为真正的会员。<br>
+							<p>当然会员进入到系统的渠道好多，如果是App、小程序或者微信公众号，我们的目标是让每个会员变成收费会员。<br>尽量不要<mark>添加会员</mark>手动添加的会员上无法和手机绑定在一起的。
+							</p>
+						</dt>
+						<dd><a href="user_add.html"><button type="button" class="button">添加会员</button></a></dd>
+					</dl>
+				</div>
+				<!-- 会员列表 -->
+				<table class="table" id="table">
+					<thead>
+						<th width="5%">选择</th>
+						<th width="10%">头像</th>
+						<th width="30%">会员信息</th>
+						<th width="15%">账户信息</th>
+						<th width="20%">状态</th>
+						<th width="10%">微信页面</th>
+						<th width="5%">权限</th>
+						<th width="5%">操作</th>
+					</thead>
+
+					{{ range .user}}
+					<tr>
+						<td class="center"><label class="demo--label"><input class="demo--radio" type="checkbox"
+									name="demo-checkbox1"><span class="demo--checkbox demo--radioInput"></span></label>
+						</td>
+						<td class="center"><img src="./static/all/members-noimg-2.png" class="img-1"></td>
+						<td>
+							<a href="user_edit.html?id={{ .UserId}}">{{ .Username}}</a> （ ID：{{ .UserId}} ）<br>
+							关注：{{ .Bonus}}<br>
+							手机：{{ .Tel}}<br>
+							微信：{{ .Wechat}}<br>
+							推荐人：{{ .Namelist}}
+						</td>
+						<td>
+							余额：&yen; {{ .Balance}}<br>
+							消费：&yen; <b class="w16">{{ .Spent}}</b><br>
+							佣金：&yen; <b class="w14">{{ .Bonus}}</b><br>
+							积分：{{ .Credit}}<br>
+							阅览：{{ .View}}
+						</td>
+						<td>
+							登入设备：{{ .Login_device}}<br>
+							登入次数：{{ .Logged}} 次<br>
+							注册时间：{{ .Regtime}} 22:10<br>
+							最近登入：{{ .Recent_log}} 10:10<br>
+							登入 {{ .Ip}}
+						</td>
+						<td class="center"><img src="./static/all/qr-code.jpg" class="img"></td>
+						<td  class="oper" id="oper">
+							<div onclick="audit({{ .UserId}})" id="Audit{{.UserId}}" class="pointer">
+								{{ if .Audit}}
+								已审查
+								{{else}}
+								未审查
+								{{ end }}
+							</div><br>
+							<div onclick="rec({{ .UserId}})" id="Rec{{.UserId}}" class="pointer">
+								{{ if .Rec}}
+								已推荐
+								{{else}}
+								未推荐
+								{{ end }}
+							</div><br>
+							<div onclick="pushright({{ .UserId}})" id="Pushright{{.UserId}}" class="pointer">
+								{{ if .Pushright}}
+								推广权限：开
+								{{else}}
+								推广权限：关
+								{{ end }}
+							</div>
+						</td>
+						<td class="operation">
+							<a href="user_edit.html?id={{ .UserId}}">编辑</a><br><br>
+							<a onclick="delconf({{ .UserId}})" class="pointer">删除</a>
+						</td>
+					</tr>
+					{{ end }}
+				</table>
+				<table>
+					<tr>
+						<td class="center" colspan="2">全选</td>
+						<td colspan="4">
+							<div class="paging">
+								<a id="page1" href="">首页</a>
+								<!-- <a id="page2" href="">&lt;&lt;</a> -->
+								<a id="page2" href="">&lt; 上一页</a>
+								<a id="page3" href="">1</a>
+								<a id="page4" href="?page=2">2</a>
+								<a id="page5" class="no">3</a>
+								<a id="page6" href="">4</a>
+								<a id="page7" href="?page=8">5</a>
+								<a id="page8" href="">下一页 &gt;</a>
+								<!-- <a id="page1" href="">&gt;&gt;</a> -->
+								<a id="page9" href="">尾页</a>
+								<a id="max"></a>
+							</div>
+						</td>
+						<td colspan="2" class="operation"><a href="" class="w01" onclick="delall()">全部删除</a></td>
+					</tr>
+				</table	>
+				<!-- <li class="failure" datachar="CSS"></li> -->
+			</div>
+		</article>
+	</section>
+
+	<footer>
+		<!-- 系统监控内容 -->
+	</footer>
+	<script src="./static/admin/js/jquery.jedate.min.js"></script>
+	<script src="./static/admin/js/toast.js"></script>
+	<script src="./static/admin/js/uppic.js"></script>
+	<script src="./static/admin/js/xcConfirm.js"></script>
+	<script src="./static/admin/js/yzm.js"></script>
+	<script src="./static/admin/js/app.js"></script>
+	<script>
+		function delconf(id) {
+			var r = confirm("确定删除该用户吗？")
+			if (r == true) {
+			window.location.href=href="user_del?id={{ .UserId}}"+id
+			} else {}
+		}	
+		$('#searchbox').bind('keypress', function (event) { 
+			if (event.keyCode == "13") { 
+				console.log("按钮按下")
+				window.location.href="user_index.html?s="+document.getElementById("searchbox").value
+			}
+			})
+		$('#idbox').bind('keypress', function (event) { 
+		if (event.keyCode == "13") { 
+			console.log("按钮按下")
+			window.location.href="user_edit.html?id="+document.getElementById("idbox").value
+		}
+		})
+		function BS() {
+			document.getElementById("SearchButton").href="user_index.html?s="+document.getElementById("searchbox").value
+		}
+		function BI() {
+			document.getElementById("idbutton").href="user_edit.html?id="+document.getElementById("idbox").value
+		}
+		function Search() {
+			let a =document.getElementById("searchbox").value
+			$.ajax({
+				data: { f: a },
+				url: "/user_index?f=VIP",
+				async: false,
+				type: "GET",
+				dataType: "json",
+				// contentType: "application/json;charset=utf-8",
+				error: function (xhr) {
+					alert("错误提示： " + xhr.status + " ||" + xhr.statusText);
+				},
+				success: function (data) {
+					let lations = data;	
+					console.log("数据： " + lations)
+			window.location.reload() 
+
+				}
+
+			});
+		}
+		function audit(id) {
+			var lations
+			console.log(id)
+			aid="a "+id
+			$.ajax({
+				data: { order: aid },
+				url: "/user_audit",
+				async: false,
+				type: "GET",
+				dataType: "json",
+				// contentType: "application/json;charset=utf-8",
+				error: function (xhr) {
+					alert("错误提示： " + xhr.status + " ||" + xhr.statusText);
+				},
+				success: function (data) {
+					lations=data
+				}
+			});
+			if (lations==0){
+			document.getElementById("Audit"+id).innerText="未审查"}else{
+			document.getElementById("Audit"+id).innerText="已审查"
+			}
+			// let str="#Audit"+id
+			// $(str).load(location.href + str)
+			// $("#oper").load(location.href +"#oper" )
+			// window.location.reload() 
+
+		}
+		function rec(id) {
+			var lations
+			console.log(id)
+			aid="r "+id
+			$.ajax({
+				data: { order: aid },
+				url: "/user_audit",
+				async: false,
+				type: "GET",
+				dataType: "json",
+				// contentType: "application/json;charset=utf-8",
+				error: function (xhr) {
+					alert("错误提示： " + xhr.status + " ||" + xhr.statusText);
+				},
+				success: function (data) {
+					lations=data
+				}
+
+			});
+			if (lations==0){
+			document.getElementById("Rec"+id).innerText="未推荐"}else{
+			document.getElementById("Rec"+id).innerText="已推荐"
+			}
+		}
+		function pushright(id) {
+			var lations
+			console.log(id)
+			pid="p "+id
+			$.ajax({
+				data: { order: pid },
+				url: "/user_audit",
+				async: false,
+				type: "GET",
+				dataType: "json",
+				// contentType: "application/json;charset=utf-8",
+				error: function (xhr) {
+					alert("错误提示： " + xhr.status + " ||" + xhr.statusText);
+				},
+				success: function (data) {
+					lations=data
+				}
+
+			});
+			if (lations==0){
+			document.getElementById("Pushright"+id).innerText="推广权限：关"}else{
+			document.getElementById("Pushright"+id).innerText="推广权限：开"
+			}
+		}
+		
+	</script>
+	<script>
+		
+let y= document.getElementById("msgbox")
+$("#success").click(function () {
+		var max=Number( document.getElementById("totall").innerText)
+		var x
+		$(".notify").toggleClass("active");
+		$("#notifyType").toggleClass("success");
+	
+		setTimeout(function(){
+		  $(".notify").removeClass("active");
+		  $("#notifyType").removeClass("success");
+		},5000);
+		$.ajax({
+				data:{x:document.getElementById("generaten").value},
+				url: "/user_generate",
+				async: false,
+				type: "GET",
+				dataType: "json",
+				contentType: "application/json;charset=utf-8",
+				error: function (xhr) {
+					alert("错误提示： " + xhr.status + " " + xhr.statusText);
+				},
+				success: function (data) {
+					let lations = data;
+					x = document.getElementById("generaten").value
+					y.setAttribute("datachar","已添加" + x + "个用户")
+					// y.datachar="已添加" + x + "个用户"
+					// alert("已添加" + x + "个用户")
+				}
+			});
+			
+			$("#table").load(location.href + " #table")
+			$("#vipn").load(location.href + " #vipn")
+			// $("#totall").load(location.href + " #totall")
+			x=Number(x)
+			max+=x
+			// var max=Math.ceil(document.getElementById("totall").innerText/10)
+			document.getElementById("totall").innerText=max
+			// console.log("gener: "+document.getElementById("totall").innerText)
+			dready(Math.ceil(max/10))
+			
+	  });
+	  $("#box").click(function () {
+		$(".notify").toggleClass("active");
+		$("#notifyType").toggleClass("box");
+	
+		setTimeout(function(){
+		  $(".notify").removeClass("active");
+		  $("#notifyType").removeClass("box");
+		},1000);
+		
+	  });
+	  
+	  $("#failure").click(function () {
+		$(".notify").addClass("active");
+		$("#notifyType").addClass("failure");
+
+		setTimeout(function(){
+		  $(".notify").removeClass("active");
+		  $("#notifyType").removeClass("failure");
+		},2000);
+		$.ajax({
+				// url: "{{urlfor "User_generateController.Delall"}}",
+				// data: { persondata:"1" },
+				url: "/user_generate",
+				async: false,
+				type: "POST",
+				// dataType: "json",
+				// contentType: "application/json;charset=utf-8",
+				error: function (xhr) {
+					alert("错误提示： " + xhr.status + " ||" + xhr.statusText);
+				},
+				success: function (data) {
+					let lations = data;
+					if (lations == 0) {
+					y.setAttribute("datachar",'当前无用户')
+						// alert();
+					} else {
+					y.setAttribute("datachar","已删除全部" + lations + "个用户")
+						// alert();
+					}
+				}
+
+			});
+			// window.location.reload()
+			$("#table").load(location.href + " #table")
+			$("#vipn").load(location.href + " #vipn")
+			document.getElementById("totall").innerText=0
+			dready(0)
+			
+
+	  });
+	  </script>
+</body>
+
+</html>
